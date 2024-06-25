@@ -386,6 +386,36 @@ agent = initialize_agent(
 )
 ```
 
+## PYDANTIC MULTIPLE FUNCTION OPENAI LLM ROUTING
+
+OpenAI allows passing a set of function and let the LLM decide which to use based on the question context.
+
+```python
+
+from langchain.utils.openai_functions import convert_pydantic_to_openai_function
+import openai
+
+class WeatherSearch(BaseModel):
+    """Call this with an airport code to get the weather at that airport"""
+    airport_code: str = Field(description="airport code to get weather for")
+
+
+class ArtistSearch(BaseModel):
+    """Call this to get the names of songs by a particular artist"""
+    artist_name: str = Field(description="name of artist to look up")
+    n: int = Field(description="number of results")
+
+functions = [
+    convert_pydantic_to_openai_function(WeatherSearch),
+    convert_pydantic_to_openai_function(ArtistSearch),
+]
+
+model = ChatOpenAI()
+
+model_with_functions = model.bind(functions=functions)
+
+model_with_functions.invoke("what is the weather in sf?")
+
 ## Conclusion
 This repository provides various examples of using LangChain for different purposes. Each section illustrates how to implement and use specific features, helping you to build robust and efficient language models. Feel free to explore and modify the code to suit your needs.
 
