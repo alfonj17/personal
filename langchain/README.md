@@ -30,7 +30,7 @@ This section shows how to manage conversation memory using LangChain, which help
 
 ### Basic Conversation Memory
 ```python
-Copy code
+
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationChain
 from langchain.memory import ConversationBufferMemory
@@ -50,7 +50,7 @@ conversation = ConversationChain(
 ### Windowed Conversation Memory
 
 ```python
-Copy code
+
 from langchain.memory import ConversationBufferWindowMemory
 
 # Initialize windowed memory
@@ -74,7 +74,7 @@ conversation = ConversationChain(
 This section explains how to set up a simple sequential chain to process a series of prompts sequentially.
 
 ```python
-Copy code
+
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain, SimpleSequentialChain
 
@@ -107,7 +107,7 @@ overall_simple_chain.run(product)
 This section covers how to create a more complex sequential chain that processes multiple prompts in sequence and uses the output of one as the input for the next.
 
 ```python
-Copy code
+
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain, SequentialChain
 
@@ -154,7 +154,7 @@ overall_chain.run(review)
 This section demonstrates how to use a routing chain to select the appropriate prompt based on the input.
 
 ```python
-Copy code
+
 from langchain.chains.router import MultiPromptChain
 from langchain.chains.router.llm_router import LLMRouterChain, RouterOutputParser
 from langchain.prompts import PromptTemplate
@@ -301,7 +301,7 @@ This section demonstrates how to create and use agents in LangChain for various 
 Basic Agent Setup
 
 ```python
-Copy code
+
 from langchain.agents.agent_toolkits import create_python_agent
 from langchain.agents import load_tools, initialize_agent
 from langchain.agents import AgentType
@@ -331,7 +331,7 @@ agent("What is the 25% of 300?")
 ## Python Agent
 
 ```python
-Copy code
+
 from langchain.agents.agent_toolkits import create_python_agent
 from langchain.tools.python.tool import PythonREPLTool
 from langchain.chat_models import ChatOpenAI
@@ -365,7 +365,7 @@ langchain.debug=False
 This section shows how to customize an agent tool for specific tasks.
 
 ```python
-Copy code
+
 from langchain.agents import tool
 from datetime import date
 
