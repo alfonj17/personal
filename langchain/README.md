@@ -469,6 +469,29 @@ chain = prompt | model | OpenAIFunctionsAgentOutputParser()
 chain.invoke({"input": "what is the weather in sf right now"})
 ```
 
+## AGENT FINNISH LOOP
+
+Langchain offersthe capability of developing functions and iterate between them until the answer is given by a default agent (AgentFinish) instead of an adhoc/customized function (AgentAction) taking the agent output as the next agent input.
+
+```python
+
+from langchain.schema.agent import AgentFinish
+def route(result):
+    if isinstance(result, AgentFinish):
+        return result.return_values['output']
+    else:
+        tools = {
+            "search_wikipedia": search_wikipedia, 
+            "get_current_temperature": get_current_temperature,
+        }
+        return tools[result.tool].run(result.tool_input)
+
+chain = prompt | model | OpenAIFunctionsAgentOutputParser() | route
+
+result = chain.invoke({"input": "What is the weather in san francisco right now?"})
+
+```
+
 ## PYDANTIC MULTIPLE FUNCTION OPENAI LLM ROUTING
 
 OpenAI allows passing a set of function and let the LLM decide which to use based on the question context.
@@ -499,6 +522,44 @@ model_with_functions = model.bind(functions=functions)
 
 model_with_functions.invoke("what is the weather in sf?")
 
+```
+
+## CONVERSATIONAL AGENTS
+
+Conversational Agents are based on the combination of including adhoc tool and memory in the chat to allow routing between the different functions taking into account the historical conversations
+
+```python 
+
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+from langchain.tools.render import format_tool_to_openai_function
+from langchain.agents.output_parsers import OpenAIFunctionsAgentOutputParser
+from langchain.agents import AgentExecutor
+from langchain.schema.runnable import RunnablePassthrough
+from langchain.memory import ConversationBufferMemory
+
+tools = [get_current_temperature, search_wikipedia]
+functions = [format_tool_to_openai_function(f) for f in tools]
+model = ChatOpenAI(temperature=0).bind(functions=functions)
+
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are helpful but sassy assistant"),
+    MessagesPlaceholder(variable_name="chat_history"),
+    ("user", "{input}"),
+    MessagesPlaceholder(variable_name="agent_scratchpad")
+])
+
+agent_chain = RunnablePassthrough.assign(
+    agent_scratchpad= lambda x: format_to_openai_functions(x["intermediate_steps"])
+) | prompt | model | OpenAIFunctionsAgentOutputParser()
+
+memory = ConversationBufferMemory(return_messages=True,memory_key="chat_history")
+
+agent_executor = AgentExecutor(agent=agent_chain, tools=tools, verbose=True, memory=memory)
+
+```
+
 ## Conclusion
 This repository provides various examples of using LangChain for different purposes. Each section illustrates how to implement and use specific features, helping you to build robust and efficient language models. Feel free to explore and modify the code to suit your needs.
+
 
