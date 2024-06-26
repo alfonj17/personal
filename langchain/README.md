@@ -2,6 +2,16 @@
 
 This repository contains the main code used for various purposes in the LangChain project. Each section below covers different functionalities such as prompt templates, memory management, sequential chains, and routing chains. The purpose of this code is to demonstrate how to use LangChain to build complex and efficient language models.
 
+```
+Chain
+   ├── Model
+   │    ├── LLM
+   │    └── Tools
+   ├── Prompt
+   ├── Output Parser
+   └── Route Options
+```
+
 ## PROMPT TEMPLATE
 
 This section demonstrates how to create and use a prompt template with LangChain.
